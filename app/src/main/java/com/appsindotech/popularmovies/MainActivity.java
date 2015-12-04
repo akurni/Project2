@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.appsindotech.popularmovies.fragment.MovieListFragment;
 
-public class MainActivity extends AppCompatActivity implements MovieListFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements MovieListFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

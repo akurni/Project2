@@ -5,8 +5,8 @@ package com.appsindotech.popularmovies.util;
  */
 public class ImagePathUtil {
     public static final String BASE_PATH = "http://image.tmdb.org/t/p/";
-    public static String getImagePath(String path)
-    {
+
+    public static String getImagePath(String path) {
         return String.format(BASE_PATH + "w185/%s", path);
     }
 }

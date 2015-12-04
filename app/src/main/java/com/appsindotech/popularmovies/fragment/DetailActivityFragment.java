@@ -53,7 +53,7 @@ public class DetailActivityFragment extends Fragment {
 
         Picasso.with(getActivity()).load(movieData.getPosterPath()).into(imagePoster);
         textTitle.setText(movieData.getTitle());
-        textRelease.setText(movieData.getReleaseDate().substring(0,4));
+        textRelease.setText(movieData.getReleaseDate().substring(0, 4));
         textRating.setText(String.format("%.1f/10", movieData.getVoteAverage()));
         textOverview.setText(movieData.getOverview());
     }

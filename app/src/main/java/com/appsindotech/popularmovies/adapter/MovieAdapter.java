@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
-
     private final Context context;
     private List<MovieData> movieData = new ArrayList<>();
     private OnItemClickListener itemClickListener;
@@ -54,6 +53,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         return movieData.size();
     }
 
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public MovieData getItem(int position) {
+        return movieData.get(position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
     /**
      * This class contains all butterknife-injected Views & Layouts from layout file 'grid_movie_item.xml'
      * for easy to all layout elements.
@@ -61,7 +72,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Bind(R.id.img_thumbnail)
         ImageView imgThumbnail;
         @Bind(R.id.text_title)
@@ -80,20 +91,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             }
         }
     }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view , int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public MovieData getItem(int position)
-    {
-        return movieData.get(position);
-    }
-
 
 
 }

@@ -12,6 +12,18 @@ import java.util.List;
 
 public class MovieData implements Parcelable {
 
+    public static final Parcelable.Creator<MovieData> CREATOR = new Parcelable.Creator<MovieData>() {
+        @Override
+        public MovieData createFromParcel(Parcel parcel) {
+            return new MovieData(parcel);
+        }
+
+        @Override
+        public MovieData[] newArray(int i) {
+            return new MovieData[i];
+        }
+
+    };
     @SerializedName("adult")
     @Expose
     private Boolean adult;
@@ -273,17 +285,4 @@ public class MovieData implements Parcelable {
         dest.writeString(releaseDate);
 
     }
-
-    public static final Parcelable.Creator<MovieData> CREATOR = new Parcelable.Creator<MovieData>() {
-        @Override
-        public MovieData createFromParcel(Parcel parcel) {
-            return new MovieData(parcel);
-        }
-
-        @Override
-        public MovieData[] newArray(int i) {
-            return new MovieData[i];
-        }
-
-    };
 }

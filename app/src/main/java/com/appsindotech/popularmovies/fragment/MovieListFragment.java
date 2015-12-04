@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,23 +88,18 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     public void onStop() {
         super.onStop();
 
-        if(subscription != null && !subscription.isUnsubscribed())
-        {
+        if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
     }
 
-    private void loadData()
-    {
+    private void loadData() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = sharedPreferences.getString(getString(R.string.pref_sort_order_key), "popular.desc");
 
-        if(sortOrder.contentEquals("popular.desc"))
-        {
+        if (sortOrder.contentEquals("popular.desc")) {
             getActivity().setTitle(getString(R.string.popular_movies));
-        }
-        else
-        {
+        } else {
             getActivity().setTitle(getString(R.string.highest_rated));
         }
         subscription = MovieDbService.getDb().getPopularMovies(sortOrder)
