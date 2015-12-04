@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="popular_movies">Most Popular</string>
+    <string name="highest_rated">Highest-Rated</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="title_activity_detail">Movie Detail</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_sort_order_title">Sort Order</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_sort_default_value">popular.desc</string>
+    <string name="pref_sort_order_key">pref_sort_type</string>
+</resources>
