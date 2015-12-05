@@ -11,7 +11,7 @@ import rx.Observable;
 
 public final class MovieDbService {
     public static final String API_URL = "https://api.themoviedb.org/3/";
-    public static final String API_KEY = "fe2ba09ec60e3f3834bc68522989a9ac";
+    public static final String API_KEY = "API_KEY";
     public static MovieDb db;
 
     public static MovieDb getDb() {
