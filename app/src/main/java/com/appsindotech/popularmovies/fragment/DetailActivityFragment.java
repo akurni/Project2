@@ -20,6 +20,8 @@ import butterknife.ButterKnife;
  */
 public class DetailActivityFragment extends Fragment {
 
+    private static final String MOVIE_DATA = "data";
+
     @Bind(R.id.image_poster)
     ImageView imagePoster;
     @Bind(R.id.text_title)
@@ -36,6 +38,19 @@ public class DetailActivityFragment extends Fragment {
     public DetailActivityFragment() {
     }
 
+    public static DetailActivityFragment newInstance(MovieData data) {
+        DetailActivityFragment f = new DetailActivityFragment();
+
+        // Supply json input as an argument.
+        Bundle args = new Bundle();
+        args.putParcelable(MOVIE_DATA, data);
+
+        f.setArguments(args);
+
+        return f;
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,11 +64,12 @@ public class DetailActivityFragment extends Fragment {
         super.onStart();
 
         // Get movie data and display it to the user
-        MovieData movieData = getActivity().getIntent().getExtras().getParcelable("movie_detail");
+        MovieData movieData = getArguments().getParcelable(MOVIE_DATA);
 
         Picasso.with(getActivity()).load(movieData.getPosterPath()).into(imagePoster);
         textTitle.setText(movieData.getTitle());
-        textRelease.setText(movieData.getReleaseDate().substring(0, 4));
+        if(movieData.getReleaseDate() != null)
+            textRelease.setText(movieData.getReleaseDate().substring(0, 4));
         textRating.setText(String.format("%.1f/10", movieData.getVoteAverage()));
         textOverview.setText(movieData.getOverview());
     }

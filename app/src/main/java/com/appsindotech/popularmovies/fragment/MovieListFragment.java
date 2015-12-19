@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link OnMovieSelectedListener} interface
  * to handle interaction events.
  */
 public class MovieListFragment extends Fragment implements MovieAdapter.OnItemClickListener {
@@ -44,7 +44,7 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
 
     public static final String MOVIE_KEY="movies";
 
-    private OnFragmentInteractionListener mListener;
+    private OnMovieSelectedListener mListener;
     private rx.Subscription subscription;
     private MovieAdapter movieGridAdapter;
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
@@ -76,8 +76,8 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnMovieSelectedListener) {
+            mListener = (OnMovieSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -142,9 +142,8 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     public void onItemClick(View view, int position) {
         Log.i("MovieListFragment", "Item Clicked pos: " + position);
 
-        Intent i = new Intent(getActivity(), DetailActivity.class);
-        i.putExtra("movie_detail", movieGridAdapter.getItem(position));
-        startActivity(i);
+        mListener.onMovieSelected(movieGridAdapter.getItem(position));
+        
     }
 
     @Override
@@ -161,11 +160,11 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
             listOfMovies = (List<MovieData>)savedInstanceState.get(MOVIE_KEY);
         }
     }
-    /**
-     * Will use it for the next project
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+
+    public interface OnMovieSelectedListener
+    {
+        public void onMovieSelected(MovieData data);
     }
+    
 }
