@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,9 +17,13 @@ import com.appsindotech.popularmovies.DetailActivity;
 import com.appsindotech.popularmovies.R;
 import com.appsindotech.popularmovies.adapter.MovieAdapter;
 import com.appsindotech.popularmovies.api.MovieDbService;
+import com.appsindotech.popularmovies.api.model.MovieData;
 import com.appsindotech.popularmovies.api.model.MovieResults;
 import com.appsindotech.popularmovies.widget.AutofitRecyclerView;
 import com.appsindotech.popularmovies.widget.MarginDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,10 +42,13 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     @Bind(R.id.movie_grid)
     AutofitRecyclerView movieGrid;
 
+    public static final String MOVIE_KEY="movies";
+
     private OnFragmentInteractionListener mListener;
     private rx.Subscription subscription;
     private MovieAdapter movieGridAdapter;
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
+    private List<MovieData> listOfMovies;
 
 
     public MovieListFragment() {
@@ -80,6 +88,10 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     public void onStart() {
         super.onStart();
 
+        if(listOfMovies != null)
+        {
+            movieGridAdapter.setData(listOfMovies);
+        }
         loadData();
 
     }
@@ -108,6 +120,7 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
                 .subscribe(new Action1<MovieResults>() {
                     @Override
                     public void call(MovieResults movieResults) {
+                        listOfMovies = movieResults.getResults();
                         movieGridAdapter.setData(movieResults.getResults());
                     }
                 });
@@ -134,6 +147,20 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
         startActivity(i);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MOVIE_KEY, (ArrayList<? extends Parcelable>) listOfMovies);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+        {
+            listOfMovies = (List<MovieData>)savedInstanceState.get(MOVIE_KEY);
+        }
+    }
     /**
      * Will use it for the next project
      */

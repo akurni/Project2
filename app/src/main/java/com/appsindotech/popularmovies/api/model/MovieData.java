@@ -283,6 +283,5 @@ public class MovieData implements Parcelable {
         dest.writeString(overview);
         dest.writeDouble(voteAverage);
         dest.writeString(releaseDate);
-
     }
 }
