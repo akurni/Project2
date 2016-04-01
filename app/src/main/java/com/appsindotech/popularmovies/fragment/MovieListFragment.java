@@ -88,12 +88,12 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     public void onStart() {
         super.onStart();
 
-        if(listOfMovies != null)
-        {
+        if(listOfMovies != null) {
             movieGridAdapter.setData(listOfMovies);
         }
-        loadData();
-
+        else {
+            loadData();
+        }
     }
 
     @Override
@@ -162,9 +162,10 @@ public class MovieListFragment extends Fragment implements MovieAdapter.OnItemCl
     }
 
 
+    // Listener untuk menotifikasi Activity pada waktu Fragment di click
     public interface OnMovieSelectedListener
     {
         public void onMovieSelected(MovieData data);
     }
-    
+
 }

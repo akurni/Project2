@@ -20,7 +20,7 @@ public class DetailActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        MovieData data = getIntent().getParcelableExtra("movie_detail");
+        MovieData data = getIntent().getParcelableExtra("movie_data");
         DetailActivityFragment detailFragment = DetailActivityFragment.newInstance(data);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.detail_container, detailFragment);

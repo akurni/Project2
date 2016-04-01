@@ -68,6 +68,7 @@ public class MovieData implements Parcelable {
     private Integer voteCount;
 
     private MovieData(Parcel in) {
+        id = in.readInt();
         title = in.readString();
         posterPath = in.readString();
         overview = in.readString();
@@ -278,10 +279,13 @@ public class MovieData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(posterPath);
         dest.writeString(overview);
         dest.writeDouble(voteAverage);
         dest.writeString(releaseDate);
+
+
     }
 }

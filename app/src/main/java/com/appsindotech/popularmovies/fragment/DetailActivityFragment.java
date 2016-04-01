@@ -1,7 +1,10 @@
 package com.appsindotech.popularmovies.fragment;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.appsindotech.popularmovies.R;
+import com.appsindotech.popularmovies.adapter.DetailAdapter;
+import com.appsindotech.popularmovies.api.MovieDbService;
 import com.appsindotech.popularmovies.api.model.MovieData;
-import com.squareup.picasso.Picasso;
+import com.appsindotech.popularmovies.api.model.MovieResults;
+import com.appsindotech.popularmovies.api.model.VideoData;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -22,18 +32,11 @@ public class DetailActivityFragment extends Fragment {
 
     private static final String MOVIE_DATA = "data";
 
-    @Bind(R.id.image_poster)
-    ImageView imagePoster;
-    @Bind(R.id.text_title)
-    TextView textTitle;
-    @Bind(R.id.text_release)
-    TextView textRelease;
-    @Bind(R.id.text_duration)
-    TextView textDuration;
-    @Bind(R.id.text_rating)
-    TextView textRating;
-    @Bind(R.id.text_overview)
-    TextView textOverview;
+    @Bind(R.id.detail_list)
+    RecyclerView detailList;
+    private DetailAdapter adapter;
+    private Subscription subscription;
+    private MovieData movieData;
 
     public DetailActivityFragment() {
     }
@@ -56,6 +59,9 @@ public class DetailActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
+
+        detailList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return view;
     }
 
@@ -64,14 +70,34 @@ public class DetailActivityFragment extends Fragment {
         super.onStart();
 
         // Get movie data and display it to the user
-        MovieData movieData = getArguments().getParcelable(MOVIE_DATA);
+        movieData = (MovieData)getArguments().getParcelable(MOVIE_DATA);
 
-        Picasso.with(getActivity()).load(movieData.getPosterPath()).into(imagePoster);
-        textTitle.setText(movieData.getTitle());
-        if(movieData.getReleaseDate() != null)
-            textRelease.setText(movieData.getReleaseDate().substring(0, 4));
-        textRating.setText(String.format("%.1f/10", movieData.getVoteAverage()));
-        textOverview.setText(movieData.getOverview());
+        adapter = new DetailAdapter(getActivity(), movieData);
+        detailList.setAdapter(adapter);
+
+        loadData();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+    }
+
+    private void loadData()
+    {
+        subscription = MovieDbService.getDb().getVideos(movieData.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Action1<VideoData>() {
+                    @Override
+                    public void call(VideoData videoData) {
+                        adapter.setTrailers(videoData.getResults());
+                    }
+                });
     }
 
     @Override

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MovieListFragment
         if (findViewById(R.id.movie_detail_container) != null) {
             isDualPane = true;
 
-            detailBackground = findViewById(R.id.fragment_background);
+            detailBackground = findViewById(R.id.linearlayout_overlay);
             detailBackground.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
