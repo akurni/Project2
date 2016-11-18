@@ -1,6 +1,8 @@
 package com.appsindotech.popularmovies.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,12 +83,28 @@ public class DetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 header.textRelease.setText(movieData.getReleaseDate().substring(0, 4));
             header.textRating.setText(String.format("%.1f/10", movieData.getVoteAverage()));
             header.textOverview.setText(movieData.getOverview());
+
+            header.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
         else if(holder instanceof TrailerViewHolder)
         {
-            VideoResult currentTrailer = getTrailerItem(position);
+            final VideoResult currentTrailer = getTrailerItem(position);
             TrailerViewHolder trailer = (TrailerViewHolder)holder;
             trailer.textTrailerTitle.setText(currentTrailer.getName());
+            trailer.textTrailerTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(String.format("https://www.youtube.com/watch?v=%s",
+                                    currentTrailer.getKey())));
+                    context.startActivity(i);
+                }
+            });
         }
     }
 

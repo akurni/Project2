@@ -3,6 +3,7 @@ package com.appsindotech.popularmovies.fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,13 +17,16 @@ import com.appsindotech.popularmovies.adapter.DetailAdapter;
 import com.appsindotech.popularmovies.api.MovieDbService;
 import com.appsindotech.popularmovies.api.model.MovieData;
 import com.appsindotech.popularmovies.api.model.MovieResults;
+import com.appsindotech.popularmovies.api.model.ReviewsData;
 import com.appsindotech.popularmovies.api.model.VideoData;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -89,13 +93,31 @@ public class DetailActivityFragment extends Fragment {
 
     private void loadData()
     {
-        subscription = MovieDbService.getDb().getVideos(movieData.getId())
+//        subscription = MovieDbService.getDb().getVideos(movieData.getId())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(new Action1<VideoData>() {
+//                    @Override
+//                    public void call(VideoData videoData) {
+//                        adapter.setTrailers(videoData.getResults());
+//                    }
+//                });
+
+        subscription = Observable.zip(MovieDbService.getDb().getVideos(movieData.getId()),
+                MovieDbService.getDb().getReviews(movieData.getId()), new Func2<VideoData, ReviewsData, Pair<VideoData, ReviewsData>>() {
+
+                    @Override
+                    public Pair<VideoData, ReviewsData> call(VideoData videoData, ReviewsData reviewsData) {
+                        return new Pair<VideoData, ReviewsData>(videoData, reviewsData);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Action1<VideoData>() {
+                .subscribe(new Action1<Pair<VideoData, ReviewsData>>() {
                     @Override
-                    public void call(VideoData videoData) {
-                        adapter.setTrailers(videoData.getResults());
+                    public void call(Pair<VideoData, ReviewsData> videoDataReviewsDataPair) {
+                        adapter.setTrailers(videoDataReviewsDataPair.first.getResults());
+                        adapter.setReviews(videoDataReviewsDataPair.second.getResults());
                     }
                 });
     }
